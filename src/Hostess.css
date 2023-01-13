@@ -1,0 +1,92 @@
+ul{
+  /* display:flex;
+  flex-direction: row; */
+  padding: 0%;
+}
+
+.card
+ {
+    flex: 1 0.5 0;
+    list-style-type: none;
+    /* flex-direction: column; */
+    justify-content: flex-end;
+    box-shadow: 0 15px 25px rgba(129, 124, 124, 0.2);
+    
+    outline: 0.05px solid gray;
+    width: 25%;
+    min-width: 25%;;
+    max-width: 25%;;
+    aspect-ratio: 1 / 1;
+    position: absolute;
+    float: left;
+    background-color: black;
+    opacity: 0.85;
+    color: gray;
+    position: relative;
+
+    
+ }
+
+
+ .card:hover {
+    background: rgb(211, 175, 15);  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #908033, #e8c70e);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #908033, #e8c70e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  }
+
+  #hostess_img {
+    /* display: flex; */
+    /* align-self: flex-end; */
+    flex: 1 0 auto;
+    min-height: 50%;
+    max-height: 70%;
+    vertical-align: bottom;
+
+    justify-content: center;
+    position:relative;
+}
+
+.triangle {
+  justify-self: flex-start;
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  border-width: 0 25px 25px 0;
+  border-color: transparent #fc07f8 transparent transparent;
+  transform: rotate(270deg);
+
+  }
+
+
+
+  #order_taken_img {
+    width: 75%
+}
+
+.hostess-price{
+  /* display: flex; */
+  position: absolute;
+  bottom: 0;
+  height: 25%;
+  width:100%;
+  box-shadow: 0 15px 25px rgba(129, 124, 124, 0.2);
+  border: 0.05px solid gray;
+  background: linear-gradient(180deg, rgb(115, 115, 115),black,black,black,black, black);
+
+}
+
+.hostess-price > p {
+  font-size: 75%;
+  position: absolute;
+  align-items:center;
+  right: 5%;
+}
+
+
+
+
+ 
+ 

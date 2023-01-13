@@ -1,0 +1,23 @@
+
+.current-item
+{
+    flex: 0 1 auto;
+    width: 30%;
+    min-width: 30%;
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+    color: white;
+    opacity: 0.85;
+    background: black;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left top, #3d3a2b, black,black,black, #b44ab4);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left top, black,black, black,black, #b44ab4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    width: 300px;
+}
+
+.current-item > img {
+    width: 30%;
+}
+
+
+
