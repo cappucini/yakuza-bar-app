@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import '../CurrentItem.css';
+
+
 
 async function loginUser(credentials) {
     console.log(JSON.stringify(credentials));

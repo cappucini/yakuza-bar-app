@@ -1,11 +1,12 @@
 import './App.css';
-// import hostess_data from './hostess_data.js';
 import HostessItem from './HostessItem.js';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useReducer, useState, useEffect, useRef } from 'react';
 import CurrentItem from './CurrentItem.js';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import {useQuery, gql} from "@apollo/client"
+import {useQuery, useLazyQuery, gql} from "@apollo/client"
 import Login from './Components/Login';
+import ListItems from './Components/ListItems';
+import useToken from './Components/Token';
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
@@ -38,24 +39,50 @@ function importAll(r) {
 
 const images = importAll(require.context('./img', false, /\.(png|jpe?g|svg)$/));
 
+// function getToken() {
+//   const tokenString =  sessionStorage.getItem('token');
+//   const userToken = JSON.parse(tokenString);
+//   return userToken?.token;
+// };
+
+
 function App() {
+
   const ref = useRef(true);
+  // const [state, dispatch] = useReducer(reducer, initialState);
+
   const [requestedHostesses, setRequestedHostesses] = useState([]);
   const [currentHostess, setCurrentHostess] = useState([]);
-  const [token, setToken] = useState("");
-  const [username, setUserName] = useState("asdfsdf");
-  const [password, setPassword] = useState("hello");
-  console.log("setUsername is " + setUserName);
-  console.log("setPassword is " + setPassword);
+  // const [token, setToken] = useState(getToken());
+  const { token, setToken } = useToken();
+
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+
+
     useEffect(() => {
       if (requestedHostesses.length > 2 || requestedHostesses.length < 0){
         throw new Error ("Hostesses list cannot be > 2 or < 0");
       }
- 
     });
   
-
-  
+    const listItemsProps = {
+      client: client,
+      useQuery: useQuery,
+      useLazyQuery: useLazyQuery,
+      GET_HOSTESSES: GET_HOSTESSES,
+      ref: ref,
+      requestedHostesses: requestedHostesses,
+      setRequestedHostesses: setRequestedHostesses,
+      currentHostess: currentHostess,
+      setCurrentHostess: setCurrentHostess,
+      // token: token,
+      // saveToken: saveToken,
+      username: username,
+      setUserName: setUserName,
+      password: password,
+      setPassword: setPassword
+    };
 
  
   function printRequestedHostesses(){
@@ -75,12 +102,11 @@ function App() {
   }
 
 
-  function hostessNotFound(h){
-    const notAMatch = (curr) => h.name !== curr.name;
-    const noMatchFound = requestedHostesses.every(notAMatch);
-    return noMatchFound;
-  }
  
+  // function saveToken(userToken){
+  //   sessionStorage.setItem('token', JSON.stringify(userToken));
+  //   setToken(userToken.token);
+  // }
   /**
   * Clears all hostesses
   */
@@ -89,42 +115,6 @@ function App() {
   }
 
 
-  function ListItems(){
-    const {error, data, loading} = useQuery(GET_HOSTESSES);
-    if (loading) return 'Loading...';
-    if (error) return `Error! ${error.message}`;
-    console.log(data.hostesses);
-    const firstRender = ref.current;
-
-    if (firstRender) {
-      ref.current = false;
-      setCurrentHostess(data.hostesses[0]);
-    } 
-      const allHostesses = data.hostesses.map( h =>
-        <HostessItem hostess = {h} 
-        hoverHostess = {(value) => {
-          if (!firstRender){
-           setCurrentHostess(value);
-          console.log("setting current hostess to " + value.name);
-          }
-        }}
-        requestHostess= {
-          (value) => {
-          if (hostessNotFound(value) === false){
-            setRequestedHostesses(requestedHostesses.filter(o => o.name !== value.name));
-          } else if (requestedHostesses.length === 2){
-            alert ("You cannot request anyone else.");
-          } 
-            else {
-              setRequestedHostesses([value, ...requestedHostesses]);
-            }
-          }
-        }
-      />
-    );
-      return (
-      <ul>{allHostesses}</ul>);
-  }
 
   function CartSum(){
     return <div className="cart-sum"><img src={images["blank.png"]}></img>
@@ -142,16 +132,14 @@ function App() {
   }
 
 
-if(!token) {
-  return <Login setToken={setToken} setUserName={setUserName} setPassword={setPassword} username={username} password={password}/>
-} else
+  if(!token) {
+    return <Login setToken={setToken} setUserName={setUserName} setPassword={setPassword} username={username} password={password}/>
+  } else
   return (
-
     <ApolloProvider client = {client}>
     <div className="App">
           <header>
-          <link rel="stylesheet" href="../../font-awesome-4.7.0/css/font-awesome.min.css"/>
-          
+            <link rel="stylesheet" href="../../font-awesome-4.7.0/css/font-awesome.min.css"/>
           </header>
           <div className="full-view">
             <div className = "left_view">
@@ -159,7 +147,7 @@ if(!token) {
                 <h1>Please request a Hostess.</h1>
               </div>
               <div className="menu_container">
-                <ListItems/>
+                <ListItems props={listItemsProps} />
               </div>
 
               <button id="clear-hostesses" onClick={() => handleClearHostesses()}>Clear Hostesses?</button>
@@ -171,7 +159,6 @@ if(!token) {
 
             </div>
             <CurrentItem item = {currentHostess}/>
-
           </div>
 
     </div>

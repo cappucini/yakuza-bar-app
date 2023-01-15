@@ -6,17 +6,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Hostesses  from './Components/Hostesses';
 import LogRocket from 'logrocket';
-import Login from './Components/Login';
 
 LogRocket.init('pgl0di/cool-app');
-
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    
-          <App />
-      
+    <App />
   </React.StrictMode>
 );
 

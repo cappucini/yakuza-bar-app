@@ -8,6 +8,8 @@ function importAll(r) {
 
 const images = importAll(require.context('./img', false, /\.(png|jpe?g|svg)$/));
 
+
+
 function CurrentItem({item}) {
   
   const triangleStyle = {
@@ -20,6 +22,7 @@ function CurrentItem({item}) {
     borderWidth: "0 60px 60px 0",
     opacity: 0.5
   };
+
 
     return(
       <div className="current-item">
