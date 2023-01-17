@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import '../CurrentItem.css';
 
 
-
 async function loginUser(credentials) {
     console.log(JSON.stringify(credentials));
     return fetch('http://localhost:4000/login', {
@@ -23,8 +22,6 @@ async function loginUser(credentials) {
 export default function Login({setToken, setUserName, setPassword, username, password}) {
     const handleSubmit = async e => {
         e.preventDefault();
-        console.log("password in Login() is " + password);
-        console.log("username in Login() is " + username);
         const token = await loginUser({
           username,
           password
