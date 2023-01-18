@@ -29,7 +29,6 @@ const wsLink = new GraphQLWsLink(createClient({
 const splitLink = split(
   ({ query }) => {
     const definition = getMainDefinition(query);
-    console.log("DEFINITION is " + definition);
     return (
       definition.kind === 'OperationDefinition' &&
       definition.operation === 'subscription'
@@ -53,7 +52,6 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 console.log(splitLink)
 const client = new ApolloClient({
   link: splitLink,
-  // link: from([errorLink, httpLink]),
   cache: new InMemoryCache(),
 });
 

@@ -19,7 +19,7 @@ ul{
     aspect-ratio: 1 / 1;
     position: absolute;
     float: left;
-    background-color: black;
+    /* background-color: black; */
     opacity: 0.85;
     color: gray;
     position: relative;
