@@ -117,6 +117,7 @@ function App() {
 
 
   useEffect(() => {
+    printRequestedHostesses();
     if (requestedHostesses.length > 2 || requestedHostesses.length < 0) {
       throw new Error("Hostesses list cannot be > 2 or < 0");
     }
@@ -151,37 +152,19 @@ function App() {
 
 
 
-
-
-
-  // function HostessBooking(params) {
-  //   useSubscription(
-  //     {
-  //       document: HOSTESS_BOOKING,
-  //       variables: {hostessID: params.id}
-  //     }
-  //   )
-  // }
-  /**
-   * Select hostesses to speak to
-   */
   function handleConfirmHostesses() {
     if (requestedHostesses.length < 2) {
       alert("Please select 2 hostesses.")
     }
 
-    var hostess;
-    for (let id in requestedHostesses) {
-      bookHostess({ variables: { id: parseInt(id) } });
-    }
+    requestedHostesses.forEach(function (arrayItem) {
+      var x = arrayItem;
+      bookHostess({ variables: { id: parseInt(x.id) } });
+
+    });
   }
 
 
-
-  // function saveToken(userToken){
-  //   sessionStorage.setItem('token', JSON.stringify(userToken));
-  //   setToken(userToken.token);
-  // }
   /**
   * Clears all hostesses
   */
@@ -226,7 +209,7 @@ function App() {
               </div>
 
               <button id="clear-hostesses" onClick={() => handleClearHostesses()}>Clear Hostesses?</button>
-              <button id="confirm-hostesses" onClick={() => handleConfirmHostesses({ requestedHostesses })}>Confirm Hostesses?</button>
+              <button id="confirm-hostesses" onClick={() => handleConfirmHostesses()}>Confirm Hostesses?</button>
               <div className="horizontal-totals">
                 <CartSum />
                 <CheckTotal />
