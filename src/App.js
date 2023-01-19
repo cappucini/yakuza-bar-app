@@ -2,7 +2,7 @@ import './App.css';
 import HostessItem from './HostessItem.js';
 import React, { useReducer, useState, useEffect, useRef } from 'react';
 import CurrentItem from './CurrentItem.js';
-import { ApolloClient, InMemoryCache, ApolloProvider, split, HttpLink, useSubscription, useMutation, from } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, split, HttpLink, useMutation, from, useSubscription } from '@apollo/client';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
@@ -14,11 +14,11 @@ import { onError } from "@apollo/client/link/error";
 
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4000/graphql'
+  uri: 'http://' + window.location.hostname + ':4000/graphql'
 });
 
 const wsLink = new GraphQLWsLink(createClient({
-  url: 'ws://localhost:4000/graphql',
+  url: 'ws://' + window.location.hostname + ':4000/graphql',
 }));
 
 // The split function takes three parameters:
@@ -69,6 +69,7 @@ const GET_HOSTESSES = gql
       description
       imageUrl
       hostessClub
+      bookingStatus
     }
   }
 `;
@@ -84,6 +85,8 @@ const BOOK_HOSTESS = gql`
 
 
 
+
+
 function importAll(r) {
   let images = {};
   r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
@@ -96,9 +99,12 @@ const images = importAll(require.context('./img', false, /\.(png|jpe?g|svg)$/));
 
 
 
+
 function App() {
 
   const ref = useRef(true);
+
+  const [allHostesses, setAllHostesses] = useState([]);
 
   const [requestedHostesses, setRequestedHostesses] = useState([]);
   const [currentHostess, setCurrentHostess] = useState([]);
@@ -113,6 +119,9 @@ function App() {
 
   const [bookHostess, { data, loading, error }] = useMutation(BOOK_HOSTESS, { client: client });
 
+
+  
+  
 
   useEffect(() => {
     printRequestedHostesses();
@@ -131,6 +140,8 @@ function App() {
     setRequestedHostesses: setRequestedHostesses,
     currentHostess: currentHostess,
     setCurrentHostess: setCurrentHostess,
+    allHostesses: allHostesses,
+    setAllHostesses: setAllHostesses,
     // token: token,
     // saveToken: saveToken,
     username: username,

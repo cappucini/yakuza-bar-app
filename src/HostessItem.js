@@ -1,4 +1,6 @@
 import './Hostess.css';
+import { useSubscription } from '@apollo/client';
+import { gql } from '@apollo/client';
 
 function importAll(r) {
   let images = {};
@@ -9,8 +11,24 @@ function importAll(r) {
 
 const images = importAll(require.context('./img', false, /\.(png|jpe?g|svg)$/));
 
+// const HOSTESS_BOOKED = gql`
+//   subscription OnHostessBooked {
+//     hostessBooked {
+//       id
+//     }
+//   }
+// `;
 
-function HostessItem({ hostess, hoverHostess, requestHostess }) {
+
+function HostessItem({ hostess, hoverHostess, requestHostess, client }) {
+
+
+//   const { subscriptionData, subscriptionLoading } = useSubscription(
+//     HOSTESS_BOOKED,
+//     { client }
+// );
+
+
   var bookingStatus = hostess.bookingStatus;
   // if booked, gray out, else it's black
   const stylesObj = {

@@ -1,6 +1,25 @@
 import HostessItem from "../HostessItem";
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useEffect } from "react";
+import { useLazyQuery, useQuery, updateQuery, useSubscription } from '@apollo/client';
 import gql from 'graphql-tag';
+
+
+
+const HOSTESS_BOOKED = gql`
+  subscription hostessBooked {
+    hostessBooked {
+        id
+        name
+        price
+        likes
+        dislikes
+        description
+        imageUrl
+        hostessClub
+        bookingStatus 
+    }
+  }
+`;
 
 function hostessNotFound(props, h) {
     const notAMatch = (curr) => h.name !== curr.name;
@@ -8,10 +27,37 @@ function hostessNotFound(props, h) {
     return noMatchFound;
 }
 
+
 export default function ListItems({ props }) {
+    function subscribeToHostessBookings(){
+        subscribeToMore({
+          document: HOSTESS_BOOKED,
+          variables: {},
+          updateQuery: (prev, { subscriptionData }) => {
+
+
+            if (!subscriptionData.data){
+                return prev;
+            }
+            return Object.assign({}, prev, {
+                merge(existing, incoming) {
+                    return [...existing, ...incoming];
+                  },
+                // hostesses: subscriptionData.data,
+            });
+
+          }
+        })
+      }
+
+    useEffect(() => subscribeToHostessBookings(), []);
 
     const client = props.client;
-    const { loading, error, data } = useQuery(gql
+
+    const { data,
+        loading,
+        error,
+        subscribeToMore } = useQuery(gql
         `query {
             hostesses{
               id
@@ -25,24 +71,28 @@ export default function ListItems({ props }) {
               bookingStatus
             }
           }
-        `, { client });
+        `, { client});
+
 
     if (loading) return <p>Loading ...</p>;
     if (error) return `Error! ${error.message}`;
 
+
     const firstRender = props.ref.current;
+
 
     if (firstRender) {
         props.ref.current = false;
         props.setCurrentHostess(data.hostesses[0]);
+
     }
+
 
     const allHostesses = data.hostesses.map(h =>
         <HostessItem hostess={h}
             hoverHostess={(value) => {
                 if (!firstRender) {
                     props.setCurrentHostess(value);
-                    console.log("setting current hostess to " + value.name);
                 }
             }}
             requestHostess={
@@ -57,6 +107,7 @@ export default function ListItems({ props }) {
                     }
                 }
             }
+            client={client}
         />
     );
     return (
