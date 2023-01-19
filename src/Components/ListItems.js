@@ -43,7 +43,6 @@ export default function ListItems({ props }) {
                 merge(existing, incoming) {
                     return [...existing, ...incoming];
                   },
-                // hostesses: subscriptionData.data,
             });
 
           }
@@ -101,6 +100,8 @@ export default function ListItems({ props }) {
                         props.setRequestedHostesses(props.requestedHostesses.filter(o => o.name !== value.name));
                     } else if (props.requestedHostesses.length === 2) {
                         alert("You cannot request anyone else.");
+                    } else if (h.bookingStatus === 1){
+                        alert("This hostess has already been booked.");
                     }
                     else {
                         props.setRequestedHostesses([value, ...props.requestedHostesses]);
